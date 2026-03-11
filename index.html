@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aaradh Properties | Premium Real Estate in Patna</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* Custom animations & Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111827; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #059669; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #10b981; 
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .fade-in-up {
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Glass utilities */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-input {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        .glass-input:focus {
+            border-color: #10b981;
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Animated Background Blob */
+        .bg-blob {
+            position: fixed;
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(16,185,129,0.15) 0%, rgba(0,0,0,0) 70%);
+            z-index: -1;
+            animation: float 20s ease-in-out infinite alternate;
+        }
+        .bg-blob-2 {
+            position: fixed;
+            bottom: -10%;
+            right: -10%;
+            width: 40vw;
+            height: 40vw;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(6,78,59,0.2) 0%, rgba(0,0,0,0) 70%);
+            z-index: -1;
+            animation: float 15s ease-in-out infinite alternate-reverse;
+        }
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(10%, 10%) scale(1.1); }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-950 text-gray-200 font-sans flex flex-col relative overflow-x-hidden selection:bg-emerald-500 selection:text-white">
+
+    <!-- Ambient Background -->
+    <div class="bg-blob"></div>
+    <div class="bg-blob-2"></div>
+
+    <!-- Navbar (Glass) -->
+    <nav class="glass-panel sticky top-0 z-50 border-b-0 border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center cursor-pointer group" onclick="showView('home-view')">
+                    <div class="bg-emerald-500/20 p-2 rounded-lg group-hover:bg-emerald-500/30 transition-colors mr-3">
+                        <i class="ph-fill ph-buildings text-3xl text-emerald-400"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-bold text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-200 leading-none">Aaradh Properties</span>
+                        <span class="text-[0.65rem] text-emerald-400 font-medium uppercase tracking-widest mt-1">Exclusive to Patna</span>
+                    </div>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-6 items-center">
+                    <button onclick="showView('home-view')" class="text-gray-300 hover:text-emerald-400 transition-colors font-medium">Explore</button>
+                    <button onclick="showView('add-view')" class="bg-emerald-600/80 hover:bg-emerald-500 backdrop-blur-md text-white px-5 py-2.5 rounded-lg font-medium flex items-center transition-all duration-300 hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:-translate-y-0.5">
+                        <i class="ph ph-plus-circle text-xl mr-2"></i>
+                        List Property <span class="ml-1 opacity-80 text-sm">(₹99)</span>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="text-gray-300 hover:text-white focus:outline-none">
+                        <i id="mobile-menu-icon" class="ph ph-list text-3xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Glass) -->
+        <div id="mobile-menu" class="hidden md:hidden glass-panel border-t border-white/10 px-4 pt-2 pb-6 space-y-2 absolute w-full">
+            <button onclick="showView('home-view')" class="block w-full text-left px-4 py-3 rounded-lg hover:bg-white/10 transition-colors">Explore Patna</button>
+            <button onclick="showView('add-view')" class="block w-full text-left px-4 py-3 rounded-lg bg-emerald-600/80 hover:bg-emerald-500 font-medium text-white transition-colors">
+                List Property (₹99)
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow flex flex-col items-center w-full z-10 relative">
+        
+        <!-- ================= HOME VIEW ================= -->
+        <div id="home-view" class="w-full fade-in">
+            <!-- Hero Section -->
+            <div class="py-20 px-4 text-center border-b border-white/5 bg-gradient-to-b from-emerald-900/20 to-transparent">
+                <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-6 tracking-tight drop-shadow-lg">
+                    Find Your Perfect Space in Patna
+                </h1>
+                <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 font-light">
+                    Premium rental apartments, vibrant PGs, and exclusive properties for sale across Patna. List yours today for just ₹99.
+                </p>
+
+                <!-- Search and Sort Bar -->
+                <div class="max-w-4xl mx-auto flex flex-col md:flex-row gap-4 items-center justify-center p-2">
+                    <div class="relative w-full md:w-2/3 group">
+                        <i class="ph ph-magnifying-glass absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl group-focus-within:text-emerald-400 transition-colors"></i>
+                        <input type="text" id="search-input" oninput="filterAndSort()" placeholder="Search Patna locations, keywords, amenities..." class="w-full glass-input rounded-full py-4 pl-12 pr-6 outline-none transition-all placeholder-gray-500 text-lg shadow-lg">
+                    </div>
+                    <div class="relative w-full md:w-1/3">
+                        <i class="ph ph-funnel absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"></i>
+                        <select id="sort-select" onchange="filterAndSort()" class="w-full glass-input rounded-full py-4 pl-12 pr-10 outline-none transition-all appearance-none text-lg cursor-pointer bg-gray-900/90 hover:bg-gray-800/90">
+                            <option value="newest">Newest First</option>
+                            <option value="price-asc">Price: Low to High</option>
+                            <option value="price-desc">Price: High to Low</option>
+                        </select>
+                        <i class="ph ph-caret-down absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Listings -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="flex justify-between items-end mb-8 border-b border-white/10 pb-4">
+                    <h2 class="text-2xl font-bold text-white">Featured Properties in Patna</h2>
+                    <span id="result-count" class="text-gray-400 text-sm"></span>
+                </div>
+                
+                <div id="no-results" class="hidden text-center py-20">
+                    <i class="ph-fill ph-ghost text-6xl text-gray-600 mb-4"></i>
+                    <h3 class="text-xl text-gray-400">No properties found matching your search.</h3>
+                    <button onclick="clearSearch()" class="mt-4 text-emerald-400 hover:text-emerald-300 underline">Clear Filters</button>
+                </div>
+
+                <div id="properties-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Properties will be injected here via JavaScript -->
+                </div>
+
+                <!-- WhatsApp CTA Banner -->
+                <div class="mt-20 glass-panel rounded-3xl p-8 md:p-12 text-center border-emerald-500/30 shadow-[0_0_40px_rgba(16,185,129,0.15)] relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-r from-emerald-900/20 via-teal-900/20 to-emerald-900/20 opacity-80 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="relative z-10 flex flex-col items-center">
+                        <div class="w-20 h-20 bg-[#25D366]/20 rounded-full flex items-center justify-center mb-6 border border-[#25D366]/30 group-hover:scale-110 transition-transform duration-500">
+                            <i class="ph-fill ph-whatsapp-logo text-5xl text-[#25D366]"></i>
+                        </div>
+                        <h3 class="text-3xl md:text-4xl font-extrabold text-white mb-4">Fast-Track Your Patna Listing</h3>
+                        <p class="text-gray-300 mb-8 max-w-2xl mx-auto text-lg">Don't want to fill out the form? Message us directly on WhatsApp and we will set up the property listing for you!</p>
+                        
+                        <a href="https://wa.me/917764812598?text=Hello%20Aaradh%20Properties,%20I%20would%20like%20to%20list%20my%20property%20in%20Patna." target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold py-5 px-10 rounded-2xl shadow-[0_0_20px_rgba(37,211,102,0.3)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(37,211,102,0.6)] text-xl">
+                            <i class="ph-fill ph-whatsapp-logo mr-3 text-3xl"></i> List Your Property
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= DETAILS VIEW ================= -->
+        <div id="details-view" class="hidden w-full max-w-6xl mx-auto px-4 py-8 fade-in">
+            <button onclick="showView('home-view')" class="flex items-center text-emerald-400 hover:text-emerald-300 mb-8 font-medium transition-colors group">
+                <div class="bg-emerald-500/10 p-1.5 rounded-full mr-2 group-hover:bg-emerald-500/20 transition-colors">
+                    <i class="ph ph-arrow-left text-xl"></i>
+                </div> 
+                Back to Listings
+            </button>
+
+            <div class="glass-panel rounded-3xl shadow-2xl overflow-hidden border border-white/10">
+                <div class="h-72 md:h-[28rem] w-full relative group">
+                    <img id="detail-image" src="" alt="Property" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-900/60 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 w-full p-8 md:p-12">
+                        <span id="detail-status" class="bg-emerald-500/20 backdrop-blur-md border border-emerald-500/30 text-emerald-300 text-xs font-bold px-4 py-1.5 rounded-full mb-4 inline-block tracking-wider uppercase"></span>
+                        <h1 id="detail-title" class="text-4xl md:text-5xl font-extrabold text-white mb-3 tracking-tight"></h1>
+                        <div class="flex items-center text-gray-300 text-lg">
+                            <i class="ph-fill ph-map-pin text-emerald-400 text-2xl mr-2"></i> <span id="detail-location"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-8 md:p-12 grid grid-cols-1 lg:grid-cols-3 gap-12">
+                    <div class="lg:col-span-2 space-y-10">
+                        <div class="fade-in-up" style="animation-delay: 0.1s;">
+                            <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+                                <i class="ph-fill ph-info text-emerald-400 mr-2"></i> About Property
+                            </h2>
+                            <p id="detail-description" class="text-gray-400 leading-relaxed text-lg font-light"></p>
+                        </div>
+                        
+                        <div class="fade-in-up" style="animation-delay: 0.2s;">
+                            <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                                <i class="ph-fill ph-star text-emerald-400 mr-2"></i> Amenities & Features
+                            </h2>
+                            <div id="detail-features" class="grid grid-cols-2 gap-4">
+                                <!-- Features injected via JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fade-in-up" style="animation-delay: 0.3s;">
+                        <div class="glass-panel p-8 rounded-2xl sticky top-28 border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
+                            <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-2">Asking Price</h3>
+                            <div class="flex items-center text-4xl font-extrabold text-white mb-8">
+                                <i class="ph ph-currency-inr text-emerald-400 text-4xl mr-1"></i>
+                                <span id="detail-price"></span>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <a id="detail-call-btn" href="#" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 px-4 rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] flex justify-center items-center group">
+                                    <i class="ph-fill ph-phone-call text-xl mr-2 group-hover:animate-bounce"></i>
+                                    Call Owner
+                                </a>
+                                <a id="detail-wa-btn" href="#" target="_blank" rel="noopener noreferrer" class="w-full glass-input hover:bg-white/10 text-white font-medium py-4 px-4 rounded-xl transition-all duration-300 flex justify-center items-center group">
+                                    <i class="ph-fill ph-whatsapp-logo text-[#25D366] text-xl mr-2 group-hover:scale-110 transition-transform"></i>
+                                    WhatsApp Message
+                                </a>
+                            </div>
+                            
+                            <div class="mt-6 pt-6 border-t border-white/10 text-center">
+                                <p class="text-xs text-gray-500 flex justify-center items-center">
+                                    <i class="ph-fill ph-shield-check text-emerald-500 mr-1 text-base"></i> Verified via Aaradh Properties
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= ADD PROPERTY VIEW (PUBLIC) ================= -->
+        <div id="add-view" class="hidden w-full max-w-4xl mx-auto px-4 py-12 fade-in">
+            <div class="glass-panel rounded-3xl shadow-2xl overflow-hidden border border-white/10">
+                <div class="bg-gradient-to-r from-emerald-900/50 to-teal-900/50 px-8 py-10 text-center border-b border-white/10 relative overflow-hidden">
+                    <div class="absolute -top-10 -right-10 text-emerald-500/10"><i class="ph-fill ph-house text-[150px]"></i></div>
+                    <h1 class="text-4xl font-bold text-white mb-3 relative z-10">List Your Property</h1>
+                    <p class="text-emerald-200 text-lg relative z-10">Reach thousands of tenants and buyers in Patna. Flat ₹99 listing fee.</p>
+                </div>
+                
+                <form id="add-property-form" onsubmit="handleFormSubmit(event)" class="p-8 md:p-12 space-y-8 relative z-10">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="col-span-1 md:col-span-2 fade-in-up" style="animation-delay: 0.1s;">
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Property Title</label>
+                            <input required type="text" id="form-title" placeholder="e.g., Spacious 2BHK in City Center" class="w-full glass-input rounded-xl py-3 px-4 outline-none transition-all placeholder-gray-500" />
+                        </div>
+
+                        <div class="fade-in-up" style="animation-delay: 0.2s;">
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Property Type</label>
+                            <select id="form-type" class="w-full glass-input rounded-xl py-3 px-4 outline-none transition-all appearance-none bg-gray-900">
+                                <option value="Apartment">Apartment</option>
+                                <option value="House">Independent House</option>
+                                <option value="PG">PG / Hostel</option>
+                                <option value="Commercial">Commercial Space</option>
+                            </select>
+                        </div>
+
+                        <div class="fade-in-up" style="animation-delay: 0.2s;">
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Listing Type</label>
+                            <select id="form-status" class="w-full glass-input rounded-xl py-3 px-4 outline-none transition-all appearance-none bg-gray-900">
+                                <option value="Rent">For Rent</option>
+                                <option value="Sale">For Sale</option>
+                            </select>
+                        </div>
+
+                        <div class="fade-in-up" style="animation-delay: 0.3s;">
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Price / Rent <span class="text-gray-500 text-xs ml-1">(e.g., 15000)</span></label>
+                            <div class="relative">
+                                <i class="ph ph-currency-inr absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <input required type="text" id="form-price" placeholder="12,000 / month" class="w-full glass-input rounded-xl py-3 pl-10 pr-4 outline-none transition-all placeholder-gray-500" />
+                            </div>
+                        </div>
+
+                        <div class="fade-in-up" style="animation-delay: 0.3s;">
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Location in Patna</label>
+                            <div class="relative">
+                                <i class="ph ph-map-pin absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <input required type="text" id="form-location" placeholder="e.g., Boring Road, Patna" class="w-full glass-input rounded-xl py-3 pl-10 pr-4 outline-none transition-all placeholder-gray-500" />
+                            </div>
+                        </div>
+                        
+                        <div class="col-span-1 md:col-span-2 fade-in-up" style="animation-delay: 0.35s;">
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Contact Number</label>
+                            <div class="relative">
+                                <i class="ph ph-phone absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <input required type="tel" id="form-phone" placeholder="e.g., 919876543210 (include country code)" class="w-full glass-input rounded-xl py-3 pl-10 pr-4 outline-none transition-all placeholder-gray-500" />
+                            </div>
+                        </div>
+
+                        <div class="col-span-1 md:col-span-2 fade-in-up" style="animation-delay: 0.4s;">
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Image URL</label>
+                            <div class="relative">
+                                <i class="ph ph-image absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <input type="url" id="form-image" placeholder="https://link-to-your-image.com/photo.jpg" class="w-full glass-input rounded-xl py-3 pl-10 pr-4 outline-none transition-all text-sm placeholder-gray-500" />
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2"><i class="ph ph-info mr-1"></i>Leave blank to use a stunning default placeholder.</p>
+                        </div>
+
+                        <div class="col-span-1 md:col-span-2 fade-in-up" style="animation-delay: 0.5s;">
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Description</label>
+                            <textarea required id="form-description" rows="5" placeholder="Highlight the best parts: amenities, landmarks, natural light..." class="w-full glass-input rounded-xl py-3 px-4 outline-none transition-all resize-none placeholder-gray-500"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel bg-emerald-900/10 border-emerald-500/30 rounded-2xl p-6 mt-10 flex justify-between items-center fade-in-up" style="animation-delay: 0.6s;">
+                        <div>
+                            <h4 class="font-bold text-white text-lg flex items-center"><i class="ph-fill ph-check-circle text-emerald-400 mr-2"></i> Listing Validation Fee</h4>
+                            <p class="text-sm text-gray-400 mt-1">One-time charge to verify and publish.</p>
+                        </div>
+                        <div class="text-4xl font-black text-emerald-400 flex items-center drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]">
+                            <i class="ph ph-currency-inr text-3xl mr-1"></i> 99
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-5 px-4 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all duration-300 flex justify-center items-center text-lg mt-8 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] fade-in-up" style="animation-delay: 0.7s;">
+                        Pay ₹99 & Publish Listing <i class="ph ph-arrow-right font-bold ml-2"></i>
+                    </button>
+                    <p class="text-center text-xs text-gray-500 mt-4 fade-in-up" style="animation-delay: 0.8s;">By proceeding, you agree to our Terms of Service and Privacy Policy.</p>
+                </form>
+            </div>
+        </div>
+
+        <!-- ================= ADMIN VIEW (SECRET) ================= -->
+        <div id="admin-view" class="hidden w-full max-w-7xl mx-auto px-4 py-12 fade-in">
+            <div class="bg-gradient-to-r from-gray-900 to-emerald-950 px-8 py-6 rounded-t-3xl border-b border-emerald-500/30 flex justify-between items-center border border-emerald-400/50 border-b-0 shadow-[0_0_30px_rgba(16,185,129,0.15)]">
+                <h1 class="text-2xl font-bold text-white flex items-center">
+                    <i class="ph-fill ph-shield-check text-emerald-400 mr-3 text-3xl"></i> 
+                    Admin Dashboard
+                </h1>
+                <button onclick="showView('home-view')" class="text-gray-400 hover:text-white transition-colors bg-white/5 p-2 rounded-lg hover:bg-white/10">
+                    <i class="ph ph-x text-xl"></i> Close
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 glass-panel rounded-b-3xl border border-emerald-400/50 border-t-0 p-8 shadow-2xl">
+                
+                <!-- Left Col: Add Property -->
+                <div class="lg:col-span-2 space-y-6 border-r border-white/5 pr-0 lg:pr-8">
+                    <h2 class="text-xl font-bold text-white mb-4 border-b border-white/10 pb-2">Add New Property (Instant)</h2>
+                    <form id="admin-add-form" onsubmit="handleAdminSubmit(event)" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="col-span-1 md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Property Title</label>
+                                <input required type="text" id="admin-title" placeholder="e.g., Premium Office Space" class="w-full glass-input rounded-xl py-3 px-4 outline-none transition-all placeholder-gray-500" />
+                            </div>
+    
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Property Type</label>
+                                <select id="admin-type" class="w-full glass-input rounded-xl py-3 px-4 outline-none transition-all appearance-none bg-gray-900">
+                                    <option value="Apartment">Apartment</option>
+                                    <option value="House">Independent House</option>
+                                    <option value="PG">PG / Hostel</option>
+                                    <option value="Commercial">Commercial Space</option>
+                                </select>
+                            </div>
+    
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Listing Type</label>
+                                <select id="admin-status" class="w-full glass-input rounded-xl py-3 px-4 outline-none transition-all appearance-none bg-gray-900">
+                                    <option value="Rent">For Rent</option>
+                                    <option value="Sale">For Sale</option>
+                                </select>
+                            </div>
+    
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Price / Rent</label>
+                                <input required type="text" id="admin-price" placeholder="e.g., 20,000 / month" class="w-full glass-input rounded-xl py-3 px-4 outline-none transition-all placeholder-gray-500" />
+                            </div>
+    
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Location in Patna</label>
+                                <input required type="text" id="admin-location" placeholder="e.g., Frazer Road, Patna" class="w-full glass-input rounded-xl py-3 px-4 outline-none transition-all placeholder-gray-500" />
+                            </div>
+                            
+                            <div class="col-span-1 md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Contact Number</label>
+                                <div class="relative">
+                                    <i class="ph ph-phone absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                    <input required type="tel" id="admin-phone" placeholder="e.g., 919876543210" class="w-full glass-input rounded-xl py-3 pl-10 pr-4 outline-none transition-all placeholder-gray-500" />
+                                </div>
+                            </div>
+    
+                            <div class="col-span-1 md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Image URL</label>
+                                <input type="url" id="admin-image" placeholder="https://link-to-your-image.com/photo.jpg" class="w-full glass-input rounded-xl py-3 px-4 outline-none transition-all text-sm placeholder-gray-500" />
+                            </div>
+    
+                            <div class="col-span-1 md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Description</label>
+                                <textarea required id="admin-description" rows="4" placeholder="Property details..." class="w-full glass-input rounded-xl py-3 px-4 outline-none transition-all resize-none placeholder-gray-500"></textarea>
+                            </div>
+                        </div>
+    
+                        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 px-4 rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all duration-300 text-lg mt-4 flex justify-center items-center group">
+                            <i class="ph-fill ph-rocket-launch mr-2 group-hover:animate-bounce text-xl"></i> Publish Instantly
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Right Col: Manage Listings -->
+                <div class="lg:col-span-1 flex flex-col h-full max-h-[800px]">
+                    <h2 class="text-xl font-bold text-white mb-4 border-b border-white/10 pb-2 flex justify-between items-center">
+                        Manage Listings
+                        <button onclick="loadSampleProperties()" title="Generate Test Properties" class="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-1 rounded hover:bg-emerald-500/40 transition">Load Samples</button>
+                    </h2>
+                    
+                    <div id="admin-properties-list" class="flex-grow overflow-y-auto pr-2 space-y-3">
+                        <!-- Admin property items injected here via JS -->
+                        <p class="text-gray-500 text-sm text-center py-4">Loading database...</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ================= SUCCESS VIEW ================= -->
+        <div id="success-view" class="hidden w-full max-w-2xl mx-auto px-4 py-20 text-center fade-in">
+            <div class="glass-panel border-emerald-500/30 p-12 rounded-3xl shadow-[0_0_50px_rgba(16,185,129,0.2)] inline-block relative overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-b from-emerald-900/20 to-transparent pointer-events-none"></div>
+                <div class="relative z-10">
+                    <div class="w-24 h-24 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="ph-fill ph-check-circle text-6xl text-emerald-400 animate-pulse"></i>
+                    </div>
+                    <h2 id="success-heading" class="text-4xl font-extrabold text-white mb-4">Success!</h2>
+                    <p id="success-message" class="text-xl text-gray-300">Action completed successfully.</p>
+                    
+                    <div class="mt-8 flex justify-center items-center text-emerald-400 bg-emerald-900/30 py-3 px-6 rounded-full border border-emerald-500/20 w-max mx-auto">
+                        <i class="ph ph-spinner animate-spin text-xl mr-2"></i> Returning to view...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patna Tagline Section -->
+        <div class="w-full py-20 px-4 text-center mt-auto border-t border-white/5 bg-gradient-to-t from-emerald-900/10 to-transparent">
+            <h2 class="text-5xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-emerald-500 mb-6 tracking-tighter drop-shadow-2xl">
+                PROUDLY PATNA
+            </h2>
+            <p class="text-xl md:text-3xl text-emerald-200/80 font-light max-w-4xl mx-auto tracking-wide">
+                Your premier destination for finding the best living and commercial spaces across the capital city.
+            </p>
+        </div>
+
+    </main>
+
+    <!-- Admin Authentication Modal (Hidden) -->
+    <div id="admin-auth-modal" class="hidden fixed inset-0 z-[100] items-center justify-center bg-black/60 backdrop-blur-sm fade-in">
+        <div class="glass-panel p-8 rounded-2xl w-full max-w-sm border border-emerald-500/30 shadow-2xl">
+            <div class="flex items-center justify-center mb-6">
+                <div class="bg-emerald-900/50 p-3 rounded-full border border-emerald-500/30">
+                    <i class="ph-fill ph-lock-key text-3xl text-emerald-400"></i>
+                </div>
+            </div>
+            <h3 class="text-xl font-bold text-white text-center mb-6">Admin Access Required</h3>
+            
+            <input type="password" id="admin-code-input" placeholder="Enter Secret Code" class="w-full glass-input rounded-xl py-3 px-4 outline-none mb-3 text-white text-center tracking-widest" onkeypress="handleAdminCodeKeyPress(event)">
+            
+            <div id="admin-auth-error" class="text-red-400 text-sm text-center mb-4 h-5 opacity-0 transition-opacity">
+                <i class="ph-fill ph-warning-circle mr-1"></i> Incorrect code. Try again.
+            </div>
+
+            <div class="flex justify-between space-x-3 mt-2">
+                <button onclick="closeAdminModal()" class="flex-1 glass-input py-3 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 transition-colors">Cancel</button>
+                <button onclick="verifyAdminCode()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl transition-colors font-medium">Unlock</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Delete Confirmation Modal (Hidden) -->
+    <div id="delete-confirm-modal" class="hidden fixed inset-0 z-[200] items-center justify-center bg-black/80 backdrop-blur-md fade-in">
+        <div class="glass-panel p-8 rounded-2xl w-full max-w-sm border border-red-500/40 text-center shadow-[0_0_50px_rgba(239,68,68,0.2)]">
+            <div class="flex justify-center mb-4">
+                <div class="bg-red-500/20 p-4 rounded-full">
+                    <i class="ph-fill ph-warning-circle text-5xl text-red-500"></i>
+                </div>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-2">Delete Property?</h3>
+            <p class="text-gray-400 mb-8 text-sm">This action permanently removes the listing from the public database. It cannot be undone.</p>
+            <div class="flex space-x-4">
+                <button onclick="closeDeleteModal()" class="flex-1 glass-input hover:bg-white/10 text-white py-3 rounded-xl font-medium transition-colors">Cancel</button>
+                <button id="confirm-delete-btn" onclick="executeDelete()" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition-colors shadow-lg">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="glass-panel border-t border-white/5 py-10 mt-auto w-full z-10">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center items-center mb-4 text-gray-400 space-x-4">
+                <i class="ph-fill ph-facebook-logo text-2xl hover:text-white cursor-pointer transition-colors"></i>
+                <i class="ph-fill ph-instagram-logo text-2xl hover:text-white cursor-pointer transition-colors"></i>
+                <i class="ph-fill ph-twitter-logo text-2xl hover:text-white cursor-pointer transition-colors"></i>
+            </div>
+            <div class="text-gray-400 text-sm flex items-center justify-center">
+                &copy; <span id="current-year" class="mx-1"></span> Aaradh Properties. All rights reserved.
+                <!-- Hidden Admin Trigger -->
+                <i class="ph-fill ph-lock-key text-gray-700 hover:text-emerald-500 cursor-pointer transition-colors ml-3 text-lg" onclick="openAdminModal()" title="Admin Login"></i>
+            </div>
+            <p class="mt-2 text-gray-500 text-xs">Crafted with precision. Connecting you to your next space.</p>
+        </div>
+    </footer>
+
+    <!-- Application Logic (Google Sheets via standard Fetch) -->
+    <script>
+        // Set current year
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Sample Data Fallback (Used to seed or if offline)
+        const initialProperties = [
+            {
+                id: "1",
+                createdAt: 1700000000003,
+                title: "Luxury 3BHK Apartment in Kankarbagh",
+                type: "Apartment",
+                status: "Rent",
+                price: "15,000 / month",
+                location: "Kankarbagh, Patna",
+                phone: "919876543210",
+                image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=800",
+                description: "Experience premium living in this spacious 3BHK apartment. It comes semi-furnished with modular kitchen, wardrobes, and excellent cross-ventilation. The society offers 24/7 security, power backup, and a dedicated parking spot.",
+                features: '["3 Bedrooms", "2 Bathrooms", "Semi-Furnished", "Balcony", "Parking", "Lift Access"]'
+            },
+            {
+                id: "2",
+                createdAt: 1700000000002,
+                title: "Premium Boys PG - Boring Road",
+                type: "PG",
+                status: "Rent",
+                price: "6,500 / month",
+                location: "Boring Road, Patna",
+                phone: "919876543210",
+                image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=800",
+                description: "Comfortable and secure PG accommodation ideal for students and working professionals. Includes 3 times hygienic food, high-speed Wi-Fi, daily housekeeping, and attached washrooms. Located close to major coaching institutes.",
+                features: '["Food Included", "Wi-Fi", "AC/Non-AC Options", "Laundry", "CCTV Security"]'
+            },
+            {
+                id: "3",
+                createdAt: 1700000000001,
+                title: "Independent Villa for Sale",
+                type: "House",
+                status: "Sale",
+                price: "1.2 Cr",
+                location: "Patliputra Colony, Patna",
+                phone: "919876543210",
+                image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=800",
+                description: "A beautifully designed 4-bedroom independent house in a posh locality. Features a private garden, spacious terrace, premium flooring, and modern fittings throughout. Perfect for a large family looking for a peaceful environment.",
+                features: '["4 Bedrooms", "4 Bathrooms", "Private Garden", "Terrace", "Modular Kitchen", "2 Car Parking"]'
+            }
+        ];
+
+        // Global State
+        let properties = []; 
+        let deleteTargetId = null;
+
+        // ================= GOOGLE SHEETS SETUP =================
+        /* To connect a real Google Sheet:
+           1. Create a blank Google Sheet.
+           2. Set column headers: id, createdAt, title, type, status, price, location, phone, image, description, features
+           3. Go to SheetDB.io, sign up for free, and create an API using your Sheet's URL.
+           4. Paste your SheetDB API URL into the variable below.
+        */
+        const GOOGLE_SHEETS_API_URL = "https://sheetdb.io/api/v1/3gawospr6se5a"; // e.g., "https://sheetdb.io/api/v1/your_api_id"
+
+        // Load data on startup
+        async function loadProperties() {
+            if (GOOGLE_SHEETS_API_URL) {
+                try {
+                    const response = await fetch(GOOGLE_SHEETS_API_URL);
+                    const data = await response.json();
+                    if (Array.isArray(data)) {
+                        properties = data.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                    } else {
+                        properties = initialProperties;
+                    }
+                } catch (error) {
+                    console.error("Error fetching from Google Sheets:", error);
+                    properties = initialProperties; // Fallback to local
+                }
+            } else {
+                console.warn("No Google Sheets API URL provided. Using local sample data.");
+                properties = initialProperties; // Fallback to local
+            }
+            
+            filterAndSort();
+            if (!document.getElementById('admin-view').classList.contains('hidden')) {
+                renderAdminProperties();
+            }
+        }
+
+        // ================= CORE UI LOGIC =================
+        window.parsePrice = function(priceStr) {
+            const str = String(priceStr).toLowerCase();
+            let val = parseFloat(str.replace(/[^0-9.]/g, ''));
+            if (str.includes('cr')) val *= 10000000;
+            else if (str.includes('lakh') || str.includes('lac')) val *= 100000;
+            else if (str.includes('k')) val *= 1000;
+            return isNaN(val) ? 0 : val;
+        }
+
+        window.filterAndSort = function() {
+            const searchInput = document.getElementById('search-input');
+            const sortSelect = document.getElementById('sort-select');
+            if(!searchInput || !sortSelect) return;
+
+            const searchTerm = searchInput.value.toLowerCase();
+            const sortOrder = sortSelect.value;
+
+            let filtered = properties.filter(prop => 
+                (prop.title || "").toLowerCase().includes(searchTerm) ||
+                (prop.location || "").toLowerCase().includes(searchTerm) ||
+                (prop.type || "").toLowerCase().includes(searchTerm) ||
+                (prop.description || "").toLowerCase().includes(searchTerm) ||
+                (prop.features || "").toLowerCase().includes(searchTerm)
+            );
+
+            filtered.sort((a, b) => {
+                if (sortOrder === 'price-asc') return parsePrice(a.price) - parsePrice(b.price);
+                if (sortOrder === 'price-desc') return parsePrice(b.price) - parsePrice(a.price);
+                return (b.createdAt || 0) - (a.createdAt || 0); 
+            });
+
+            renderProperties(filtered);
+            document.getElementById('result-count').textContent = `Showing ${filtered.length} properties`;
+            
+            const noResults = document.getElementById('no-results');
+            if(filtered.length === 0) noResults.classList.remove('hidden');
+            else noResults.classList.add('hidden');
+        }
+
+        window.clearSearch = function() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('sort-select').value = 'newest';
+            filterAndSort();
+        }
+
+        window.toggleMobileMenu = function() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('mobile-menu-icon');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                menu.classList.add('fade-in-up');
+                icon.classList.replace('ph-list', 'ph-x');
+            } else {
+                menu.classList.add('hidden');
+                menu.classList.remove('fade-in-up');
+                icon.classList.replace('ph-x', 'ph-list');
+            }
+        }
+
+        window.showView = function(viewId) {
+            const views = ['home-view', 'details-view', 'add-view', 'admin-view', 'success-view'];
+            views.forEach(v => document.getElementById(v).classList.add('hidden'));
+            
+            const mobileMenu = document.getElementById('mobile-menu');
+            if(!mobileMenu.classList.contains('hidden')) toggleMobileMenu();
+
+            const view = document.getElementById(viewId);
+            view.classList.remove('hidden');
+            
+            view.classList.remove('fade-in');
+            void view.offsetWidth; 
+            view.classList.add('fade-in');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (viewId === 'home-view') filterAndSort();
+            if (viewId === 'admin-view') renderAdminProperties();
+        }
+
+        window.renderProperties = function(dataArray) {
+            const grid = document.getElementById('properties-grid');
+            if(!grid) return;
+            grid.innerHTML = ''; 
+
+            dataArray.forEach((prop, index) => {
+                const card = document.createElement('div');
+                card.className = "glass-panel rounded-2xl overflow-hidden hover:shadow-[0_10px_40px_rgba(16,185,129,0.2)] hover:-translate-y-2 transition-all duration-300 cursor-pointer group fade-in-up";
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.onclick = () => openDetails(prop.id);
+                
+                card.innerHTML = `
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="${prop.image}" alt="${prop.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-80"></div>
+                        <div class="absolute top-4 right-4 bg-gray-900/60 backdrop-blur-md border border-white/10 text-emerald-400 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
+                            For ${prop.status}
+                        </div>
+                    </div>
+                    <div class="p-6 relative">
+                        <div class="absolute -top-6 right-6 bg-emerald-600 w-12 h-12 rounded-full flex items-center justify-center shadow-lg border-4 border-gray-900 group-hover:scale-110 transition-transform">
+                            <i class="ph-fill ph-house text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2 line-clamp-1 pr-10">${prop.title}</h3>
+                        <div class="flex items-center text-gray-400 text-sm mb-5">
+                            <i class="ph-fill ph-map-pin text-lg mr-1.5 text-emerald-500 flex-shrink-0"></i>
+                            <span class="truncate">${prop.location}</span>
+                        </div>
+                        <div class="flex items-center justify-between border-t border-white/10 pt-5">
+                            <div class="flex items-center text-emerald-400 font-extrabold text-xl">
+                                <i class="ph ph-currency-inr text-2xl mr-0.5"></i>
+                                ${prop.price}
+                            </div>
+                            <span class="text-xs text-gray-300 bg-white/10 border border-white/5 px-3 py-1.5 rounded-lg tracking-wider">${prop.type}</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        window.openDetails = function(id) {
+            const prop = properties.find(p => p.id === id);
+            if (!prop) return;
+
+            document.getElementById('detail-image').src = prop.image;
+            document.getElementById('detail-title').textContent = prop.title;
+            document.getElementById('detail-status').textContent = `Available For ${prop.status}`;
+            document.getElementById('detail-location').textContent = prop.location;
+            document.getElementById('detail-description').textContent = prop.description;
+            document.getElementById('detail-price').textContent = prop.price;
+
+            const phoneNumber = prop.phone ? prop.phone.replace(/[^0-9]/g, '') : '';
+            const waMessage = `Hey, I saw your property "${prop.title}" listed on Aaradh Properties. Is it still available?`;
+            
+            document.getElementById('detail-call-btn').href = `tel:${phoneNumber}`;
+            document.getElementById('detail-wa-btn').href = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(waMessage)}`;
+
+            // Parse features string back to array (since Google Sheets stores it as text)
+            let featuresArray = [];
+            try {
+                featuresArray = JSON.parse(prop.features || '[]');
+            } catch(e) {
+                featuresArray = ["Premium Listing"];
+            }
+
+            const featuresContainer = document.getElementById('detail-features');
+            featuresContainer.innerHTML = featuresArray.map(feat => `
+                <div class="flex items-center text-gray-300 bg-white/5 border border-white/5 p-3 rounded-xl hover:bg-white/10 transition-colors">
+                    <i class="ph-fill ph-check-circle text-2xl text-emerald-500 mr-3 flex-shrink-0"></i>
+                    <span class="font-medium">${feat}</span>
+                </div>
+            `).join('');
+
+            showView('details-view');
+        }
+
+        window.triggerSuccessScreen = function(heading, message) {
+            document.getElementById('success-heading').textContent = heading;
+            document.getElementById('success-message').textContent = message;
+            showView('success-view');
+
+            setTimeout(() => {
+                document.getElementById('search-input').value = '';
+                document.getElementById('sort-select').value = 'newest';
+                showView('home-view');
+            }, 2500);
+        }
+
+        // Add Property Submit
+        window.handleFormSubmit = async function(event) {
+            event.preventDefault();
+            
+            const submitBtn = document.getElementById('submit-btn');
+            const originalContent = submitBtn.innerHTML;
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="ph ph-spinner animate-spin text-2xl mr-2"></i> Processing Securely...';
+            submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
+
+            setTimeout(async () => {
+                let image = document.getElementById('form-image').value;
+                if (!image.trim()) image = "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=800";
+
+                const newProperty = {
+                    id: Date.now().toString(),
+                    createdAt: Date.now(),
+                    title: document.getElementById('form-title').value,
+                    type: document.getElementById('form-type').value,
+                    status: document.getElementById('form-status').value,
+                    price: document.getElementById('form-price').value,
+                    location: document.getElementById('form-location').value,
+                    phone: document.getElementById('form-phone').value,
+                    image: image,
+                    description: document.getElementById('form-description').value,
+                    features: JSON.stringify(["Newly Listed", "Premium Choice", "Verified by Aaradh"])
+                };
+
+                // Save to Database (SheetDB)
+                if (GOOGLE_SHEETS_API_URL) {
+                    try {
+                        await fetch(GOOGLE_SHEETS_API_URL, {
+                            method: 'POST',
+                            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ data: [newProperty] })
+                        });
+                    } catch(e) { console.error("Save error", e); }
+                } 
+                
+                properties.unshift(newProperty); // Update local state immediately
+
+                document.getElementById('add-property-form').reset();
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalContent;
+                submitBtn.classList.remove('opacity-80', 'cursor-not-allowed');
+
+                triggerSuccessScreen("Payment Successful!", "Your property is now securely listed in the database.");
+            }, 1500);
+        }
+
+        // ================= ADMIN & DELETE LOGIC =================
+        const SECRET_ADMIN_CODE = "AARADH2009";
+
+        window.openAdminModal = function() {
+            const modal = document.getElementById('admin-auth-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.getElementById('admin-code-input').value = '';
+            document.getElementById('admin-auth-error').classList.remove('opacity-100');
+            document.getElementById('admin-code-input').focus();
+        }
+
+        window.closeAdminModal = function() {
+            const modal = document.getElementById('admin-auth-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        window.handleAdminCodeKeyPress = function(event) {
+            if (event.key === 'Enter') verifyAdminCode();
+        }
+
+        window.verifyAdminCode = function() {
+            const input = document.getElementById('admin-code-input').value;
+            const errorText = document.getElementById('admin-auth-error');
+
+            if (input === SECRET_ADMIN_CODE) {
+                closeAdminModal();
+                showView('admin-view');
+            } else {
+                errorText.classList.add('opacity-100');
+                const inputBox = document.getElementById('admin-code-input');
+                inputBox.classList.add('border-red-500');
+                setTimeout(() => inputBox.classList.remove('border-red-500'), 1000);
+            }
+        }
+
+        window.renderAdminProperties = function() {
+            const list = document.getElementById('admin-properties-list');
+            if(!list) return;
+            
+            list.innerHTML = '';
+            if(properties.length === 0) {
+                list.innerHTML = `<p class="text-gray-500 text-sm text-center py-4">Database is empty.</p>`;
+                return;
+            }
+
+            properties.forEach(prop => {
+                list.innerHTML += `
+                    <div class="glass-panel p-4 rounded-xl flex justify-between items-center bg-gray-900/30 hover:bg-gray-800/50 transition-colors group">
+                        <div class="truncate pr-4 flex-1">
+                            <p class="text-white font-bold truncate text-sm md:text-base">${prop.title}</p>
+                            <p class="text-emerald-400 text-xs mt-1"><i class="ph ph-currency-inr"></i>${prop.price}</p>
+                        </div>
+                        <button onclick="confirmDelete('${prop.id}')" class="bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white p-2.5 rounded-lg transition-colors border border-red-500/20 shadow-md">
+                            <i class="ph-fill ph-trash text-xl"></i>
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        window.handleAdminSubmit = async function(event) {
+            event.preventDefault();
+            
+            let image = document.getElementById('admin-image').value;
+            if (!image.trim()) image = "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=800";
+
+            const newProperty = {
+                id: Date.now().toString(),
+                createdAt: Date.now(),
+                title: document.getElementById('admin-title').value,
+                type: document.getElementById('admin-type').value,
+                status: document.getElementById('admin-status').value,
+                price: document.getElementById('admin-price').value,
+                location: document.getElementById('admin-location').value,
+                phone: document.getElementById('admin-phone').value,
+                image: image,
+                description: document.getElementById('admin-description').value,
+                features: JSON.stringify(["Admin Listed", "Premium Choice", "Verified by Aaradh"])
+            };
+
+            if (GOOGLE_SHEETS_API_URL) {
+                try {
+                    await fetch(GOOGLE_SHEETS_API_URL, {
+                        method: 'POST',
+                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ data: [newProperty] })
+                    });
+                } catch(e) { console.error("Save error", e); }
+            }
+            
+            properties.unshift(newProperty);
+
+            document.getElementById('admin-add-form').reset();
+            triggerSuccessScreen("Published Instantly!", "Property written directly to the database.");
+        }
+
+        // Delete Confirm Logic
+        window.confirmDelete = function(id) {
+            deleteTargetId = id;
+            document.getElementById('delete-confirm-modal').classList.remove('hidden');
+            document.getElementById('delete-confirm-modal').classList.add('flex');
+        }
+
+        window.closeDeleteModal = function() {
+            deleteTargetId = null;
+            document.getElementById('delete-confirm-modal').classList.add('hidden');
+            document.getElementById('delete-confirm-modal').classList.remove('flex');
+        }
+
+        window.executeDelete = async function() {
+            if(!deleteTargetId) return;
+            const btn = document.getElementById('confirm-delete-btn');
+            btn.innerHTML = '<i class="ph ph-spinner animate-spin text-xl"></i>';
+            btn.disabled = true;
+
+            if (GOOGLE_SHEETS_API_URL) {
+                try {
+                    // SheetDB standard delete endpoint format: /api/v1/{API_ID}/{column_name}/{value}
+                    await fetch(`${GOOGLE_SHEETS_API_URL}/id/${deleteTargetId}`, {
+                        method: 'DELETE',
+                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
+                    });
+                } catch(e) { console.error("Failed to delete", e); }
+            }
+
+            // Remove from local memory regardless of API success so UI updates immediately
+            properties = properties.filter(p => p.id !== deleteTargetId);
+            renderAdminProperties();
+            filterAndSort();
+
+            btn.innerHTML = 'Delete';
+            btn.disabled = false;
+            closeDeleteModal();
+            triggerSuccessScreen("Listing Deleted", "Property has been removed from the database.");
+        }
+
+        // Utility: Load sample templates quickly if DB is empty
+        window.loadSampleProperties = async function() {
+            const btn = event.target;
+            const orig = btn.innerHTML;
+            btn.innerHTML = "Loading...";
+            btn.disabled = true;
+
+            let loadedProps = [];
+            for(let prop of initialProperties) {
+                const newProp = {
+                    ...prop, 
+                    id: Date.now().toString() + Math.floor(Math.random()*1000), 
+                    createdAt: Date.now()
+                };
+                loadedProps.push(newProp);
+                properties.unshift(newProp);
+            }
+
+            if (GOOGLE_SHEETS_API_URL) {
+                try {
+                    await fetch(GOOGLE_SHEETS_API_URL, {
+                        method: 'POST',
+                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ data: loadedProps })
+                    });
+                } catch(e) { console.error("Save error", e); }
+            }
+            
+            renderAdminProperties();
+            filterAndSort();
+            
+            btn.innerHTML = orig;
+            btn.disabled = false;
+        }
+
+        // Run on load
+        window.onload = loadProperties;
+
+    </script>
+</body>
+</html>
