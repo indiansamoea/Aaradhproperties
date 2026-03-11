@@ -15,6 +15,7 @@
         /* Custom animations & Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
+            height: 8px;
         }
         ::-webkit-scrollbar-track {
             background: #111827; 
@@ -223,7 +224,7 @@
 
             <div class="glass-panel rounded-3xl shadow-2xl overflow-hidden border border-white/10">
                 <div class="h-72 md:h-[28rem] w-full relative group">
-                    <img id="detail-image" src="" alt="Property" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <img id="detail-main-image" src="" alt="Property" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                     <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-900/60 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 w-full p-8 md:p-12">
                         <span id="detail-status" class="bg-emerald-500/20 backdrop-blur-md border border-emerald-500/30 text-emerald-300 text-xs font-bold px-4 py-1.5 rounded-full mb-4 inline-block tracking-wider uppercase"></span>
@@ -232,6 +233,11 @@
                             <i class="ph-fill ph-map-pin text-emerald-400 text-2xl mr-2"></i> <span id="detail-location"></span>
                         </div>
                     </div>
+                </div>
+
+                <!-- Image Gallery Thumbnail Row -->
+                <div id="detail-image-gallery" class="hidden flex gap-4 p-6 overflow-x-auto bg-gray-900/80 border-b border-white/10">
+                    <!-- Thumbnails injected via JS -->
                 </div>
 
                 <div class="p-8 md:p-12 grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -342,10 +348,10 @@
                         </div>
 
                         <div class="col-span-1 md:col-span-2 fade-in-up" style="animation-delay: 0.4s;">
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Image URL</label>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Image URLs <span class="text-gray-500 text-xs ml-1">(Comma separated for multiple photos)</span></label>
                             <div class="relative">
                                 <i class="ph ph-image absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                                <input type="url" id="form-image" placeholder="https://link-to-your-image.com/photo.jpg" class="w-full glass-input rounded-xl py-3 pl-10 pr-4 outline-none transition-all text-sm placeholder-gray-500" />
+                                <input type="text" id="form-image" placeholder="https://link-to-photo1.jpg, https://link-to-photo2.jpg" class="w-full glass-input rounded-xl py-3 pl-10 pr-4 outline-none transition-all text-sm placeholder-gray-500" />
                             </div>
                             <p class="text-xs text-gray-500 mt-2"><i class="ph ph-info mr-1"></i>Leave blank to use a stunning default placeholder.</p>
                         </div>
@@ -435,8 +441,8 @@
                             </div>
     
                             <div class="col-span-1 md:col-span-2">
-                                <label class="block text-sm font-medium text-gray-300 mb-1">Image URL</label>
-                                <input type="url" id="admin-image" placeholder="https://link-to-your-image.com/photo.jpg" class="w-full glass-input rounded-xl py-3 px-4 outline-none transition-all text-sm placeholder-gray-500" />
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Image URLs <span class="text-gray-500 text-xs ml-1">(Comma separated for multiple)</span></label>
+                                <input type="text" id="admin-image" placeholder="https://photo1.jpg, https://photo2.jpg" class="w-full glass-input rounded-xl py-3 px-4 outline-none transition-all text-sm placeholder-gray-500" />
                             </div>
     
                             <div class="col-span-1 md:col-span-2">
@@ -642,6 +648,22 @@
         }
 
         // ================= CORE UI LOGIC =================
+        window.getImagesArray = function(imageStr) {
+            if (!imageStr) return ["https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=800"];
+            try {
+                const parsed = JSON.parse(imageStr);
+                if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+            } catch(e) {
+                if(typeof imageStr === 'string') {
+                    if(imageStr.includes(',')) {
+                        return imageStr.split(',').map(s => s.trim()).filter(s => s);
+                    }
+                    return [imageStr];
+                }
+            }
+            return ["https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=800"];
+        }
+
         window.parsePrice = function(priceStr) {
             const str = String(priceStr).toLowerCase();
             let val = parseFloat(str.replace(/[^0-9.]/g, ''));
@@ -727,6 +749,9 @@
             grid.innerHTML = ''; 
 
             dataArray.forEach((prop, index) => {
+                const imgs = getImagesArray(prop.image);
+                const firstImg = imgs[0] || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=800";
+
                 const card = document.createElement('div');
                 card.className = "glass-panel rounded-2xl overflow-hidden hover:shadow-[0_10px_40px_rgba(16,185,129,0.2)] hover:-translate-y-2 transition-all duration-300 cursor-pointer group fade-in-up";
                 card.style.animationDelay = `${index * 0.1}s`;
@@ -734,7 +759,7 @@
                 
                 card.innerHTML = `
                     <div class="relative h-56 overflow-hidden">
-                        <img src="${prop.image}" alt="${prop.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                        <img src="${firstImg}" alt="${prop.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                         <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-80"></div>
                         <div class="absolute top-4 right-4 bg-gray-900/60 backdrop-blur-md border border-white/10 text-emerald-400 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
                             For ${prop.status}
@@ -766,7 +791,20 @@
             const prop = properties.find(p => p.id === id);
             if (!prop) return;
 
-            document.getElementById('detail-image').src = prop.image;
+            const imgs = getImagesArray(prop.image);
+            document.getElementById('detail-main-image').src = imgs[0];
+            
+            const gallery = document.getElementById('detail-image-gallery');
+            if (imgs.length > 1) {
+                gallery.classList.remove('hidden');
+                gallery.innerHTML = imgs.map((img) => `
+                    <img src="${img}" onclick="document.getElementById('detail-main-image').src='${img}'" class="w-24 h-24 md:w-32 md:h-32 object-cover rounded-xl cursor-pointer border-2 border-white/10 hover:border-emerald-500 transition-all flex-shrink-0 shadow-lg" alt="Thumbnail"/>
+                `).join('');
+            } else {
+                gallery.classList.add('hidden');
+                gallery.innerHTML = '';
+            }
+
             document.getElementById('detail-title').textContent = prop.title;
             document.getElementById('detail-status').textContent = `Available For ${prop.status}`;
             document.getElementById('detail-location').textContent = prop.location;
@@ -822,8 +860,9 @@
             submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
 
             setTimeout(async () => {
-                let image = document.getElementById('form-image').value;
-                if (!image.trim()) image = "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=800";
+                let imageInput = document.getElementById('form-image').value;
+                let imageArray = imageInput.split(',').map(s => s.trim()).filter(s => s !== "");
+                let finalImage = imageArray.length > 0 ? JSON.stringify(imageArray) : "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=800";
 
                 const newProperty = {
                     id: Date.now().toString(),
@@ -834,7 +873,7 @@
                     price: document.getElementById('form-price').value,
                     location: document.getElementById('form-location').value,
                     phone: document.getElementById('form-phone').value,
-                    image: image,
+                    image: finalImage,
                     description: document.getElementById('form-description').value,
                     features: JSON.stringify(["Newly Listed", "Premium Choice", "Verified by Aaradh"])
                 };
@@ -862,7 +901,7 @@
         }
 
         // ================= ADMIN & DELETE LOGIC =================
-        const SECRET_ADMIN_CODE = "AARADH2009";
+        const SECRET_ADMIN_CODE = "admin123";
 
         window.openAdminModal = function() {
             const modal = document.getElementById('admin-auth-modal');
@@ -926,8 +965,9 @@
         window.handleAdminSubmit = async function(event) {
             event.preventDefault();
             
-            let image = document.getElementById('admin-image').value;
-            if (!image.trim()) image = "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=800";
+            let imageInput = document.getElementById('admin-image').value;
+            let imageArray = imageInput.split(',').map(s => s.trim()).filter(s => s !== "");
+            let finalImage = imageArray.length > 0 ? JSON.stringify(imageArray) : "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=800";
 
             const newProperty = {
                 id: Date.now().toString(),
@@ -938,7 +978,7 @@
                 price: document.getElementById('admin-price').value,
                 location: document.getElementById('admin-location').value,
                 phone: document.getElementById('admin-phone').value,
-                image: image,
+                image: finalImage,
                 description: document.getElementById('admin-description').value,
                 features: JSON.stringify(["Admin Listed", "Premium Choice", "Verified by Aaradh"])
             };
